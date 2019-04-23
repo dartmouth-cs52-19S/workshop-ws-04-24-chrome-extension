@@ -349,32 +349,38 @@ The background file listens for browser events and acts on them. It can send inf
 
 ### Manifest Setup
 Add the background script to ```manifest.json```
-   ```json
+   ```
+   json
    "background": {
        "scripts": ["background.js"]
      },
+     
     ```
 
 Additionally, the extension requires permission to access the current tab, the browswer storage, notification and any webpage. 
-```"permissions": [
+```
+"permissions": [
        "tabs",
        "storage",
        "notifications",
        "http://*/",
        "https://*/"
-     ]
+  ]
+  
 ```
 
-### Background Logic
-Then create the background.js file.
 
-The first thing that our background file can do is set some text on the extension's logo to indicate whether it is on or off: 
+### We are done with manifest.json.Lets work on out Background Logic.
+Create a background.js file.
+
+The first thing that our background.js file can do is set some text on the extension's logo to indicate whether it is on or off: 
 ```javascript
 //Setting badge/button of the extension.
 chrome.browserAction.setBadgeText({ text: 'OFF' });
 ```
 
-Next we'll set the default state for ```enable``` to ```false``` for *off* and we'll store it in the [Chrome Storage](https://developer.chrome.com/apps/storage). 
+Next we'll set the default state for ```enable``` to ```false``` for *off* and we'll store it in the [Chrome Storage](https://developer.chrome.com/apps/storage). ```enable``` is a boolean that keeps tracks of the on or off status of the button.
+
 ```javascript
 // boolean for on/off 
 var enable=false;
@@ -408,8 +414,8 @@ chrome.browserAction.onClicked.addListener((tab) => {
 ```
 
 
-### Incorporate into Content Script
-Now we only want the content script to run when the extension is enabled. In ```background.js``` we stored the variable ```enable``` in the browser storage, so we can get it in the content script using the [storage sync](https://developer.chrome.com/apps/storage) api.
+### Incorporate the button into Content Script
+Now we only want the content script to run when the extension is enabled. Since we stored the variable ```enable ``` in the browser storage when we were running```background.js``` .We access the variable and use it to dertemine if  ```content script``` should be executed.We use the [storage sync](https://developer.chrome.com/apps/storage) api to get the variable.
 
 ```javascript
 chrome.storage.sync.get("enable", function(result) {
